@@ -15,6 +15,7 @@ defmodule EventConsumer do
     }
   end
 
+  @impl true
   def handle_event({:MESSAGE_CREATE, message, _ws_state}) do
     event_type = :MESSAGE_CREATE
     Logger.debug("Received event: #{event_type}")
@@ -27,9 +28,8 @@ defmodule EventConsumer do
     end
   end
 
-  @doc """
-  Default handler to handle all unhandled events.
-  """
+  # Default handler to handle all unhandled events.
+  @impl true
   def handle_event(event) do
     event_type = elem(event, 0)
     Logger.debug("Ignored event: #{event_type}")
