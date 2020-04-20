@@ -1,6 +1,6 @@
 FROM elixir:1.10.2-slim AS build
 WORKDIR /app
-ADD . /app
+COPY . /app
 ENV MIX_ENV 'prod'
 RUN mix local.rebar --force \
   && mix local.hex --force \
