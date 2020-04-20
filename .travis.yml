@@ -45,4 +45,4 @@ deploy:
     script: bash "${DEPLOY_ARTIFACTS_DIR}"/deploy.sh
     skip_cleanup: true
     on:
-      tags: master
+      branch: master
