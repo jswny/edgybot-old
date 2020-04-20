@@ -5,24 +5,30 @@ services:
 
 env:
   global:
-    - TEST_CMD='mix compile'
-    - TRAVIS_SSH_KEY_TYPES='rsa,dsa,ecdsa'
-    - DEPLOY_ARTIFACTS_DIR='deploy'
-    - DEPLOY_ROOT_DIR='/srv'
-    - REPOSITORY=$(basename "$TRAVIS_REPO_SLUG")
-    - BETA_BRANCH='develop'
-    - DOCKER_IMAGE_TAG=$(bash "${DEPLOY_ARTIFACTS_DIR}"/generate_docker_image_tag.sh)
-    - DOCKER_IMAGE_NAME="${DOCKER_USERNAME}"/"${REPOSITORY}":"${DOCKER_IMAGE_TAG}"
-    - DEPLOY_KEY_ENV_VAR_PREFIX='encrypted_dfdcfd5172af'
+    - TEST_CMD: 'mix compile'
+    - TRAVIS_SSH_KEY_TYPES: 'rsa,dsa,ecdsa'
+    - DEPLOY_ARTIFACTS_DIR: 'deploy'
+    - DEPLOY_ROOT_DIR: '/srv'
+    - REPOSITORY: $(basename "$TRAVIS_REPO_SLUG")
+    - BETA_BRANCH: 'develop'
+    - DOCKER_IMAGE_TAG: $(bash "${DEPLOY_ARTIFACTS_DIR}"/generate_docker_image_tag.sh)
+    - DOCKER_IMAGE_NAME: "${DOCKER_USERNAME}"/"${REPOSITORY}":"${DOCKER_IMAGE_TAG}"
+    - DEPLOY_KEY_ENV_VAR_PREFIX: 'encrypted_dfdcfd5172af'
+    - HADOLINT_VERSION: "1.17.5"
+    - HADOLINT: "${HOME}/hadolint"
 
 before_deploy:
   - bash -c 'shopt -s globstar nullglob; shellcheck deploy/*.{sh,ksh,bash}'
   - eval "$(ssh-agent -s)"
   - bash "${DEPLOY_ARTIFACTS_DIR}"/setup_ssh.sh
 
+install:
+  - curl -sLo ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-$(uname -s)-$(uname -m)" && chmod 700 ${HADOLINT}
+
 script:
   - docker build --target build --tag "$REPOSITORY" .
   - docker run "$REPOSITORY" bash -c "$TEST_CMD"
+  - ${HADOLINT} Dockerfile
 
 deploy:
   - provider: script
