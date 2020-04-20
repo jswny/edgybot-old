@@ -1,0 +1,48 @@
+language: minimal
+
+services:
+  - docker
+
+env:
+  global:
+    - TEST_CMD='mix compile'
+    - TRAVIS_SSH_KEY_TYPES='rsa,dsa,ecdsa'
+    - DEPLOY_ARTIFACTS_DIR='deploy'
+    - DEPLOY_ROOT_DIR='/srv'
+    - REPOSITORY=$(basename "$TRAVIS_REPO_SLUG")
+    - DOCKER_IMAGE_TAG=$(bash "${DEPLOY_ARTIFACTS_DIR}"/generate_docker_image_tag.sh)
+    - DOCKER_IMAGE_NAME="${DOCKER_USERNAME}"/"${REPOSITORY}":"${DOCKER_IMAGE_TAG}"
+    - BETA_BRANCH='develop'
+
+before_deploy:
+  - eval "$(ssh-agent -s)"
+  - bash "${DEPLOY_ARTIFACTS_DIR}"/setup_ssh.sh
+
+script:
+  - docker build --target build --tag "$REPOSITORY" .
+  - docker run "$REPOSITORY" bash -c "$TEST_CMD"
+
+deploy:
+  - provider: script
+    script: bash "${DEPLOY_ARTIFACTS_DIR}"/docker_push.sh
+    skip_cleanup: true
+    on:
+      branch: develop
+
+  - provider: script
+    script: bash "${DEPLOY_ARTIFACTS_DIR}"/docker_push.sh
+    skip_cleanup: true
+    on:
+      branch: master
+
+  - provider: script
+    script: bash "${DEPLOY_ARTIFACTS_DIR}"/deploy.sh
+    skip_cleanup: true
+    on:
+      branch: develop
+
+  - provider: script
+    script: bash "${DEPLOY_ARTIFACTS_DIR}"/deploy.sh
+    skip_cleanup: true
+    on:
+      branch: master
