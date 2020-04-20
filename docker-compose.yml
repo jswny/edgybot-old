@@ -2,7 +2,7 @@ version: '3'
 services:
   bot:
     build: .
-    image: "jswny/edgybot:${TAG:-latest}"
-    container_name: "edgybot-${TAG:-latest}"
+    image: "jswny/edgybot:${TAG:-beta}"
+    container_name: "edgybot-${TAG:-beta}"
     environment:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
