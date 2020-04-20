@@ -10,9 +10,9 @@ env:
     - DEPLOY_ARTIFACTS_DIR='deploy'
     - DEPLOY_ROOT_DIR='/srv'
     - REPOSITORY=$(basename "$TRAVIS_REPO_SLUG")
+    - BETA_BRANCH='develop'
     - DOCKER_IMAGE_TAG=$(bash "${DEPLOY_ARTIFACTS_DIR}"/generate_docker_image_tag.sh)
     - DOCKER_IMAGE_NAME="${DOCKER_USERNAME}"/"${REPOSITORY}":"${DOCKER_IMAGE_TAG}"
-    - BETA_BRANCH='develop'
     - DEPLOY_KEY_ENV_VAR_PREFIX='encrypted_dfdcfd5172af'
 
 before_deploy:
