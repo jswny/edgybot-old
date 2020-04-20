@@ -1,4 +1,4 @@
-# Edgybot
+# Edgybot [![Build Status](https://travis-ci.com/jswny/edgybot.svg?branch=develop)](https://travis-ci.com/jswny/edgybot)
 
 Edgybot bot for Discord.
 
