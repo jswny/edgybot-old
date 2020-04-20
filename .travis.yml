@@ -16,6 +16,7 @@ env:
     - DEPLOY_KEY_ENV_VAR_PREFIX='encrypted_dfdcfd5172af'
 
 before_deploy:
+  - bash -c 'shopt -s globstar nullglob; shellcheck deploy/*.{sh,ksh,bash}'
   - eval "$(ssh-agent -s)"
   - bash "${DEPLOY_ARTIFACTS_DIR}"/setup_ssh.sh
 
