@@ -27,3 +27,6 @@ edgybot-*.tar
 
 # Environment variables
 .env
+
+# Deployment artifacts
+deploy/
