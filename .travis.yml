@@ -7,18 +7,22 @@ env:
   global:
     - TEST_CMD='mix compile'
     - TRAVIS_SSH_KEY_TYPES='rsa,dsa,ecdsa'
-    - DEPLOY_ARTIFACTS_DIR='deploy'
+    - DEPLOY_ARTIFACTS_DIR='deploy/artifacts'
     - DEPLOY_ROOT_DIR='/srv'
     - REPOSITORY=$(basename "$TRAVIS_REPO_SLUG")
+    - BRANCH="${TRAVIS_BRANCH}"
     - BETA_BRANCH='develop'
     - DOCKER_IMAGE_TAG=$(bash "${DEPLOY_ARTIFACTS_DIR}"/generate_docker_image_tag.sh)
     - DOCKER_IMAGE_NAME="${DOCKER_USERNAME}"/"${REPOSITORY}":"${DOCKER_IMAGE_TAG}"
-    - DEPLOY_KEY_ENV_VAR_PREFIX='encrypted_dfdcfd5172af'
+    - ENCRYPTED_DEPLOY_KEY_ENV_VAR_PREFIX='encrypted_dfdcfd5172af'
+    - ENCRYPTED_DEPLOY_KEY_PATH="deploy_key.enc"
+    - ENCRYPTED_DEPLOY_KEY_CYPHER_KEY="${encrypted_dfdcfd5172af_key}"
+    - ENCRYPTED_DEPLOY_KEY_IV="${encrypted_dfdcfd5172af_iv}"
+    - DOCKER_IMAGE_SHELL="sh"
     - HADOLINT_VERSION="1.17.5"
     - HADOLINT="${HOME}/hadolint"
 
 before_deploy:
-  - bash -c 'shopt -s globstar nullglob; shellcheck --exclude=SC2029 deploy/*.{sh,ksh,bash}'
   - eval "$(ssh-agent -s)"
   - bash "${DEPLOY_ARTIFACTS_DIR}"/setup_ssh.sh
 
