@@ -7,12 +7,12 @@ env:
   global:
     - TEST_CMD='mix compile'
     - TRAVIS_SSH_KEY_TYPES='rsa,dsa,ecdsa'
-    - DEPLOY_ARTIFACTS_DIR='deploy/artifacts'
+    - DEPLOY_ARTIFACTS_PATH='deploy/artifacts'
     - DEPLOY_ROOT_DIR='/srv'
     - REPOSITORY=$(basename "$TRAVIS_REPO_SLUG")
     - BRANCH="${TRAVIS_BRANCH}"
     - BETA_BRANCH='develop'
-    - DOCKER_IMAGE_TAG=$(bash "${DEPLOY_ARTIFACTS_DIR}"/generate_docker_image_tag.sh)
+    - DOCKER_IMAGE_TAG=$(bash "${DEPLOY_ARTIFACTS_PATH}"/generate_docker_image_tag.sh)
     - DOCKER_IMAGE_NAME="${DOCKER_USERNAME}"/"${REPOSITORY}":"${DOCKER_IMAGE_TAG}"
     - ENCRYPTED_DEPLOY_KEY_ENV_VAR_PREFIX='encrypted_dfdcfd5172af'
     - ENCRYPTED_DEPLOY_KEY_PATH="deploy_key.enc"
@@ -24,7 +24,7 @@ env:
 
 before_deploy:
   - eval "$(ssh-agent -s)"
-  - bash "${DEPLOY_ARTIFACTS_DIR}"/setup_ssh.sh
+  - bash "${DEPLOY_ARTIFACTS_PATH}"/setup_ssh.sh
 
 install:
   - curl -sLo ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-$(uname -s)-$(uname -m)" && chmod 700 ${HADOLINT}
@@ -42,21 +42,21 @@ script:
 
 deploy:
   - provider: script
-    script: bash "${DEPLOY_ARTIFACTS_DIR}"/docker_push.sh
+    script: bash "${DEPLOY_ARTIFACTS_PATH}"/docker_push.sh
     on:
       branch: develop
 
   - provider: script
-    script: bash "${DEPLOY_ARTIFACTS_DIR}"/docker_push.sh
+    script: bash "${DEPLOY_ARTIFACTS_PATH}"/docker_push.sh
     on:
       branch: master
 
   - provider: script
-    script: bash "${DEPLOY_ARTIFACTS_DIR}"/deploy.sh
+    script: bash "${DEPLOY_ARTIFACTS_PATH}"/deploy.sh
     on:
       branch: develop
 
   - provider: script
-    script: bash "${DEPLOY_ARTIFACTS_DIR}"/deploy.sh
+    script: bash "${DEPLOY_ARTIFACTS_PATH}"/deploy.sh
     on:
       branch: master
