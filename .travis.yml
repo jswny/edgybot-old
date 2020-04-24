@@ -6,7 +6,7 @@ services:
 env:
   global:
     - TEST_CMD='mix compile'
-    - TRAVIS_SSH_KEY_TYPES='rsa,dsa,ecdsa'
+    - SSH_KEY_TYPES='rsa,dsa,ecdsa'
     - DEPLOY_ARTIFACTS_PATH='deploy/artifacts'
     - DEPLOY_ROOT_DIR='/srv'
     - REPOSITORY=$(basename "$TRAVIS_REPO_SLUG")
