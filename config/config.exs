@@ -1,7 +1,7 @@
 import Config
 
 config :edgybot, Edgybot.Repo,
-  database: "edgybot_repo",
+  database: "edgybot",
   username: "postgres",
   password: "postgres",
   hostname: "localhost"

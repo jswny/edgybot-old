@@ -7,6 +7,7 @@ defmodule Edgybot.MixProject do
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -27,6 +28,13 @@ defmodule Edgybot.MixProject do
       {:nostrum, "~> 0.4.1"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"}
+    ]
+  end
+
+  defp aliases do
+    [
+      "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
