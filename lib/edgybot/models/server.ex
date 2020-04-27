@@ -1,4 +1,4 @@
-defmodule Edgybot.Server do
+defmodule Edgybot.Meta.Server do
   use Ecto.Schema
   import Ecto.Changeset
 
