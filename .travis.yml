@@ -5,7 +5,7 @@ services:
 
 env:
   global:
-    - TEST_CMD='mix compile'
+    - TEST_CMD='mix test'
     - SSH_KEY_TYPES='rsa,dsa,ecdsa'
     - DEPLOY_ARTIFACTS_PATH='deploy/artifacts'
     - DEPLOY_ROOT_DIR='/srv'
