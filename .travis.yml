@@ -32,7 +32,7 @@ notifications:
   email: false
 
 before_script:
-  - ${HADOLINT} Dockerfile
+  - "${HADOLINT}" Dockerfile
   - psql -c "ALTER USER postgres WITH PASSWORD 'postgres';" -U postgres
 
 script:
@@ -47,7 +47,7 @@ deploy:
     script: bash "${DEPLOY_ARTIFACTS_PATH}"/docker_push.sh
     skip_cleanup: true
     on:
-      branch: develop
+      branch: "${BETA_BRANCH}"
 
   - provider: script
     script: bash "${DEPLOY_ARTIFACTS_PATH}"/docker_push.sh
@@ -59,7 +59,7 @@ deploy:
     script: bash "${DEPLOY_ARTIFACTS_PATH}"/deploy.sh
     skip_cleanup: true
     on:
-      branch: develop
+      branch: "${BETA_BRANCH}"
 
   - provider: script
     script: bash "${DEPLOY_ARTIFACTS_PATH}"/deploy.sh
