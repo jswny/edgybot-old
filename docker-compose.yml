@@ -1,15 +1,29 @@
 version: '3'
 services:
-  bot:
-    build: .
-    image: "jswny/edgybot:${TAG:-beta}"
-    container_name: "edgybot-${TAG:-beta}"
-    environment:
-      - DISCORD_TOKEN=${DISCORD_TOKEN}
-      - DATABASE_URL="ecto://postgres:postgres@edgybot-${TAG:-beta}-db/edgybot_prod"
   db:
     image: postgres:12.2-alpine
     container_name: "edgybot-${TAG:-beta}-db"
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=edgybot_prod
+  migration:
+    image: "jswny/edgybot:${TAG:-beta}"
+    container_name: "edgybot-${TAG:-beta}-migration"
+    depends_on:
+      - db
+    command: eval "Edgybot.Release.migrate"
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DATABASE_URL=""
+      - DATABASE_URL=ecto://postgres:postgres@edgybot-${TAG:-beta}-db:5432/edgybot_prod
+  bot:
+    build: .
+    image: "jswny/edgybot:${TAG:-beta}"
+    container_name: "edgybot-${TAG:-beta}"
+    depends_on:
+      - db
+      - migration
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DATABASE_URL=ecto://postgres:postgres@edgybot-${TAG:-beta}-db:5432/edgybot_prod
+  
