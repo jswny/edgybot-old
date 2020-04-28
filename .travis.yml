@@ -15,14 +15,12 @@ env:
     - REPOSITORY=$(basename "$TRAVIS_REPO_SLUG")
     - BRANCH="${TRAVIS_BRANCH}"
     - BETA_BRANCH='develop'
-    - DEPLOY_CHANNEL_VAR_PREFIXES="DISCORD_TOKEN,DATABASE_URL"
+    - DEPLOY_CHANNEL_VAR_PREFIXES="DISCORD_TOKEN"
     - ENCRYPTED_DEPLOY_KEY_PATH="deploy_key.enc"
     - ENCRYPTED_DEPLOY_KEY_CYPHER_KEY="${encrypted_dfdcfd5172af_key}"
     - ENCRYPTED_DEPLOY_KEY_IV="${encrypted_dfdcfd5172af_iv}"
     - HADOLINT_VERSION="1.17.5"
     - HADOLINT="${HOME}/hadolint"
-    - DATABASE_URL_BETA="ecto://postgres:postgres@edgybot-beta-db/edgybot_prod"
-    - DATABASE_URL_STABLE="${DATABASE_URL_BETA}"
 
 install:
   - curl -sLo ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-$(uname -s)-$(uname -m)" && chmod 700 ${HADOLINT}

@@ -6,6 +6,7 @@ services:
     container_name: "edgybot-${TAG:-beta}"
     environment:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DATABASE_URL="ecto://postgres:postgres@edgybot-${TAG:-beta}-db/edgybot_prod"
   db:
     image: postgres:12.2-alpine
     container_name: "edgybot-${TAG:-beta}-db"
