@@ -1,30 +1,26 @@
-language: minimal
+language: elixir
+
+elixir: '1.10.2'
+otp_release: '22.2.8'
 
 services:
   - docker
+  - postgresql
 
 env:
   global:
-    - TEST_CMD='mix compile'
     - SSH_KEY_TYPES='rsa,dsa,ecdsa'
     - DEPLOY_ARTIFACTS_PATH='deploy/artifacts'
     - DEPLOY_ROOT_DIR='/srv'
     - REPOSITORY=$(basename "$TRAVIS_REPO_SLUG")
     - BRANCH="${TRAVIS_BRANCH}"
     - BETA_BRANCH='develop'
-    - DOCKER_IMAGE_TAG=$(bash "${DEPLOY_ARTIFACTS_PATH}"/generate_docker_image_tag.sh)
-    - DOCKER_IMAGE_NAME="${DOCKER_USERNAME}"/"${REPOSITORY}":"${DOCKER_IMAGE_TAG}"
     - DEPLOY_CHANNEL_VAR_PREFIXES="DISCORD_TOKEN"
     - ENCRYPTED_DEPLOY_KEY_PATH="deploy_key.enc"
     - ENCRYPTED_DEPLOY_KEY_CYPHER_KEY="${encrypted_dfdcfd5172af_key}"
     - ENCRYPTED_DEPLOY_KEY_IV="${encrypted_dfdcfd5172af_iv}"
-    - DOCKER_IMAGE_SHELL="sh"
     - HADOLINT_VERSION="1.17.5"
     - HADOLINT="${HOME}/hadolint"
-
-before_deploy:
-  - eval "$(ssh-agent -s)"
-  - bash "${DEPLOY_ARTIFACTS_PATH}"/setup_ssh.sh
 
 install:
   - curl -sLo ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-$(uname -s)-$(uname -m)" && chmod 700 ${HADOLINT}
@@ -35,17 +31,26 @@ notifications:
     on_success: change
   email: false
 
-script:
+before_script:
   - ${HADOLINT} Dockerfile
-  - docker build --target build --tag "$REPOSITORY" .
-  - docker run "$REPOSITORY" bash -c "$TEST_CMD"
+  - psql -c "ALTER USER postgres WITH PASSWORD 'postgres';" -U postgres
+
+script:
+  - mix local.rebar --force 
+  - mix local.hex --force
+  - mix deps.get
+  - mix test
+
+before_deploy:
+  - eval "$(ssh-agent -s)"
+  - bash "${DEPLOY_ARTIFACTS_PATH}"/setup_ssh.sh
 
 deploy:
   - provider: script
     script: bash "${DEPLOY_ARTIFACTS_PATH}"/docker_push.sh
     skip_cleanup: true
     on:
-      branch: develop
+      branch: "${BETA_BRANCH}"
 
   - provider: script
     script: bash "${DEPLOY_ARTIFACTS_PATH}"/docker_push.sh
@@ -57,7 +62,7 @@ deploy:
     script: bash "${DEPLOY_ARTIFACTS_PATH}"/deploy.sh
     skip_cleanup: true
     on:
-      branch: develop
+      branch: "${BETA_BRANCH}"
 
   - provider: script
     script: bash "${DEPLOY_ARTIFACTS_PATH}"/deploy.sh

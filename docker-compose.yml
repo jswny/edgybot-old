@@ -6,3 +6,9 @@ services:
     container_name: "edgybot-${TAG:-beta}"
     environment:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
+  db:
+    image: postgres:12.2-alpine
+    container_name: "edgybot-${TAG:-beta}-db"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=edgybot_prod
