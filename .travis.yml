@@ -32,7 +32,7 @@ notifications:
   email: false
 
 before_script:
-  - "${HADOLINT}" Dockerfile
+  - ${HADOLINT} Dockerfile
   - psql -c "ALTER USER postgres WITH PASSWORD 'postgres';" -U postgres
 
 script:
