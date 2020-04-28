@@ -1,7 +1,4 @@
 import Config
 
 config :edgybot, Edgybot.Repo,
-  database: "edgybot_prod",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost"
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
