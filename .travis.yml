@@ -36,6 +36,9 @@ before_script:
   - psql -c "ALTER USER postgres WITH PASSWORD 'postgres';" -U postgres
 
 script:
+  - mix local.rebar --force 
+  - mix local.hex --force
+  - mix deps.get
   - mix test
 
 before_deploy:
