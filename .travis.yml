@@ -1,11 +1,13 @@
-language: minimal
+language: elixir
+
+elixir: '1.10.2'
 
 services:
   - docker
+  - postgresql
 
 env:
   global:
-    - TEST_CMD='mix test'
     - SSH_KEY_TYPES='rsa,dsa,ecdsa'
     - DEPLOY_ARTIFACTS_PATH='deploy/artifacts'
     - DEPLOY_ROOT_DIR='/srv'
@@ -22,10 +24,6 @@ env:
     - HADOLINT_VERSION="1.17.5"
     - HADOLINT="${HOME}/hadolint"
 
-before_deploy:
-  - eval "$(ssh-agent -s)"
-  - bash "${DEPLOY_ARTIFACTS_PATH}"/setup_ssh.sh
-
 install:
   - curl -sLo ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-$(uname -s)-$(uname -m)" && chmod 700 ${HADOLINT}
 
@@ -35,10 +33,16 @@ notifications:
     on_success: change
   email: false
 
-script:
+before_script:
   - ${HADOLINT} Dockerfile
-  - docker build --target build --tag "$REPOSITORY" .
-  - docker run "$REPOSITORY" bash -c "$TEST_CMD"
+  - psql -c "ALTER USER postgres WITH PASSWORD 'postgres';" -U postgres
+
+script:
+  - mix test
+
+before_deploy:
+  - eval "$(ssh-agent -s)"
+  - bash "${DEPLOY_ARTIFACTS_PATH}"/setup_ssh.sh
 
 deploy:
   - provider: script
