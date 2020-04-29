@@ -5,7 +5,7 @@ defmodule Edgybot.Repo.Migrations.CreateChannels do
     create table(:channels) do
       add :discord_id, :string, null: false
       add :name, :string, null: false
-      add :server_id, references(:servers)
+      add :server_id, references(:servers), null: false
 
       timestamps()
     end
