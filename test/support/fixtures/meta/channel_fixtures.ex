@@ -3,7 +3,6 @@ defmodule Edgybot.Meta.ChannelFixtures do
   import Edgybot.Meta.ServerFixtures
 
   def channel_valid_attrs(attrs \\ %{}) do
-    IO.inspect(attrs)
     %{
       discord_id: "123",
       name: "foo",
