@@ -4,11 +4,12 @@ defmodule Edgybot.Meta.ServerFixtures do
   def server_valid_attrs() do
     %{
       discord_id: "123",
-      name: "foo"
+      name: "foo",
+      active: true
     }
   end
 
-  def server_invalid_attrs(), do: %{discord_id: nil, name: nil}
+  def server_invalid_attrs(), do: %{discord_id: nil, name: nil, active: nil}
 
   def server_fixture(attrs \\ %{}) do
     {:ok, server} =

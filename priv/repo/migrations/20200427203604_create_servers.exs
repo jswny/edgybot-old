@@ -3,8 +3,9 @@ defmodule Edgybot.Repo.Migrations.CreateServers do
 
   def change do
     create table(:servers) do
-      add :discord_id, :string
+      add :discord_id, :string, null: false
       add :name, :string, null: false
+      add :active, :boolean, null: false
 
       timestamps()
     end
