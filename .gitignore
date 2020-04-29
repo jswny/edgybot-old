@@ -27,3 +27,6 @@ edgybot-*.tar
 
 # Environment variables
 .env
+
+# Postgres Data
+pgdata/
