@@ -15,6 +15,12 @@ defmodule Edgybot.MetaTest do
       assert {:error, %Ecto.Changeset{}} = Meta.create_server(attrs)
     end
 
+    test "create_server/1 with invalid snowflake returns error changeset" do
+      attrs = server_valid_attrs(%{snowflake: -1})
+      assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_server(attrs)
+      assert %{snowflake: ["invalid snowflake"]} = errors_on(changeset)
+    end
+
     test "create_server/1 with existing snowflake returns error changeset" do
       server_fixture()
       attrs = server_valid_attrs()
@@ -35,6 +41,13 @@ defmodule Edgybot.MetaTest do
       attrs = channel_invalid_attrs()
       assert {:error, %Ecto.Changeset{}} = Meta.create_channel(attrs)
     end
+
+    test "create_server/1 with invalid snowflake returns error changeset" do
+      attrs = channel_valid_attrs(%{snowflake: -1})
+      assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_channel(attrs)
+      assert %{snowflake: ["invalid snowflake"]} = errors_on(changeset)
+    end
+
 
     test "create_channel/1 with invalid server_id returns error changeset" do
       attrs = channel_valid_attrs(%{server_id: -1})
