@@ -1,4 +1,4 @@
-defmodule Edgybot.RepoCase do
+defmodule Edgybot.DataCase do
   use ExUnit.CaseTemplate
 
   using do
@@ -7,7 +7,9 @@ defmodule Edgybot.RepoCase do
 
       import Ecto
       import Ecto.Query
-      import Edgybot.RepoCase
+      import Edgybot.DataCase
+
+      import Edgybot.Meta.ServerFixtures
     end
   end
 

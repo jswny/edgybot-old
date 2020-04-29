@@ -2,7 +2,6 @@ defmodule Edgybot.Meta.Server do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @primary_key {:id, :string, []}
   schema "servers" do
     field :discord_id, :string
     field :name, :string

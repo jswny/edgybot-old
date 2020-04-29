@@ -1,31 +1,25 @@
 defmodule Edgybot.ServersTest do
-  use Edgybot.RepoCase
+  use Edgybot.DataCase
 
   alias Edgybot.Meta
-
-  @valid_attrs %{
-    discord_id: "123",
-    name: "foo"
-  }
-
-  @invalid_attrs %{
-    discord_id: "123",
-  }
 
   describe "servers" do
     alias Edgybot.Meta.Server
 
     test "create_server/1 with valid data creates a server" do
-      assert {:ok, %Server{}} = Meta.create_server(@valid_attrs)
+      attrs = server_valid_attrs()
+      assert {:ok, %Server{}} = Meta.create_server(attrs)
     end
 
     test "create_server/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Meta.create_server(@invalid_attrs)
+      attrs = server_invalid_attrs()
+      assert {:error, %Ecto.Changeset{}} = Meta.create_server(attrs)
     end
 
     test "create_server/1 with existing discord_id returns error changeset" do
-      Meta.create_server(@valid_attrs)
-      assert {:error, %Ecto.Changeset{}} = Meta.create_server(@valid_attrs)
+      server_fixture()
+      attrs = server_valid_attrs()
+      assert {:error, %Ecto.Changeset{}} = Meta.create_server(attrs)
     end
   end
 end
