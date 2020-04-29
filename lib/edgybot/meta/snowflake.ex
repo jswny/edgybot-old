@@ -1,6 +1,6 @@
 defmodule Edgybot.Meta.Snowflake do
   import Ecto.Changeset
-  import Nostrum.Snowflake
+  require Nostrum.Snowflake
 
   def validate_snowflake(changeset, field) when is_atom(field) do
     validate_change(changeset, field, fn (_current_field, value) ->

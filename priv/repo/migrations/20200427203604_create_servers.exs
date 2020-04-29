@@ -5,7 +5,7 @@ defmodule Edgybot.Repo.Migrations.CreateServers do
     create table(:servers) do
       add :snowflake, :bigint, null: false
       add :name, :string, null: false
-      add :active, :boolean, null: false
+      add :active, :boolean, null: false, default: true
 
       timestamps()
     end

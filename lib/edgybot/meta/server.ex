@@ -16,7 +16,7 @@ defmodule Edgybot.Meta.Server do
   def changeset(server, params \\ %{}) do
     server
     |> cast(params, [:snowflake, :name, :active])
-    |> validate_required([:snowflake, :name, :active])
+    |> validate_required([:snowflake, :name])
     |> validate_snowflake(:snowflake)
     |> unique_constraint(:snowflake)
   end
