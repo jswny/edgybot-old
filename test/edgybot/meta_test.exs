@@ -15,11 +15,11 @@ defmodule Edgybot.MetaTest do
       assert {:error, %Ecto.Changeset{}} = Meta.create_server(attrs)
     end
 
-    test "create_server/1 with existing discord_id returns error changeset" do
+    test "create_server/1 with existing snowflake returns error changeset" do
       server_fixture()
       attrs = server_valid_attrs()
       assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_server(attrs)
-      assert %{discord_id: ["has already been taken"]} = errors_on(changeset)
+      assert %{snowflake: ["has already been taken"]} = errors_on(changeset)
     end
   end
 
@@ -42,11 +42,11 @@ defmodule Edgybot.MetaTest do
       assert %{server: ["does not exist"]} = errors_on(changeset)
     end
 
-    test "create_channel/1 with existing discord_id returns error changeset" do
+    test "create_channel/1 with existing snowflake returns error changeset" do
       channel = channel_fixture()
       attrs = channel_valid_attrs(%{server_id: channel.server_id})
       assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_channel(attrs)
-      assert %{discord_id: ["has already been taken"]} = errors_on(changeset)
+      assert %{snowflake: ["has already been taken"]} = errors_on(changeset)
     end
   end
 end

@@ -3,13 +3,13 @@ defmodule Edgybot.Repo.Migrations.CreateChannels do
 
   def change do
     create table(:channels) do
-      add :discord_id, :string, null: false
+      add :snowflake, :bigint, null: false
       add :name, :string, null: false
       add :server_id, references(:servers), null: false
 
       timestamps()
     end
 
-    create unique_index(:channels, [:discord_id])
+    create unique_index(:channels, [:snowflake])
   end
 end

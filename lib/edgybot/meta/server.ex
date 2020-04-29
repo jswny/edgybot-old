@@ -3,7 +3,7 @@ defmodule Edgybot.Meta.Server do
   import Ecto.Changeset
 
   schema "servers" do
-    field :discord_id, :string
+    field :snowflake, :integer
     field :name, :string
     field :active, :boolean
 
@@ -12,8 +12,8 @@ defmodule Edgybot.Meta.Server do
 
   def changeset(server, params \\ %{}) do
     server
-    |> cast(params, [:discord_id, :name, :active])
-    |> validate_required([:discord_id, :name, :active])
-    |> unique_constraint(:discord_id)
+    |> cast(params, [:snowflake, :name, :active])
+    |> validate_required([:snowflake, :name, :active])
+    |> unique_constraint(:snowflake)
   end
 end

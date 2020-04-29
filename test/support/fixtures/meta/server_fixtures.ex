@@ -3,13 +3,13 @@ defmodule Edgybot.Meta.ServerFixtures do
 
   def server_valid_attrs() do
     %{
-      discord_id: "123",
+      snowflake: 200317799350927360,
       name: "foo",
       active: true
     }
   end
 
-  def server_invalid_attrs(), do: %{discord_id: nil, name: nil, active: nil}
+  def server_invalid_attrs(), do: %{snowflake: nil, name: nil, active: nil}
 
   def server_fixture(attrs \\ %{}) do
     {:ok, server} =
