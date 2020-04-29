@@ -30,3 +30,6 @@ edgybot-*.tar
 
 # Deployment artifacts
 deploy/
+
+# Postgres data
+pgdata/
