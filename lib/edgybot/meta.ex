@@ -16,7 +16,7 @@ defmodule Edgybot.Meta do
 
   def create_user(attrs \\ %{}) do
     %User{}
-    |> Channel.changeset(attrs)
+    |> User.changeset(attrs)
     |> Repo.insert()
   end
 end

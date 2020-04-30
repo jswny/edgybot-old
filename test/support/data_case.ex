@@ -10,6 +10,7 @@ defmodule Edgybot.DataCase do
       import Edgybot.DataCase
 
       import Edgybot.Meta.ServerFixtures
+      import Edgybot.Meta.UserFixtures
       import Edgybot.Meta.ChannelFixtures
     end
   end

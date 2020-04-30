@@ -29,6 +29,33 @@ defmodule Edgybot.MetaTest do
     end
   end
 
+  describe "users" do
+    alias Edgybot.Meta.User
+
+    test "create_user/1 with valid data creates a user" do
+      attrs = user_valid_attrs()
+      assert {:ok, %User{}} = Meta.create_user(attrs)
+    end
+
+    test "create_user/1 with invalid data returns error changeset" do
+      attrs = user_invalid_attrs()
+      assert {:error, %Ecto.Changeset{}} = Meta.create_user(attrs)
+    end
+
+    test "create_user/1 with invalid snowflake returns error changeset" do
+      attrs = user_valid_attrs(%{snowflake: -1})
+      assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_user(attrs)
+      assert %{snowflake: ["invalid snowflake"]} = errors_on(changeset)
+    end
+
+    test "create_user/1 with existing snowflake returns error changeset" do
+      user_fixture()
+      attrs = user_valid_attrs()
+      assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_user(attrs)
+      assert %{snowflake: ["has already been taken"]} = errors_on(changeset)
+    end
+  end
+
   describe "channels" do
     alias Edgybot.Meta.Channel
 
@@ -42,7 +69,7 @@ defmodule Edgybot.MetaTest do
       assert {:error, %Ecto.Changeset{}} = Meta.create_channel(attrs)
     end
 
-    test "create_server/1 with invalid snowflake returns error changeset" do
+    test "create_channel/1 with invalid snowflake returns error changeset" do
       attrs = channel_valid_attrs(%{snowflake: -1})
       assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_channel(attrs)
       assert %{snowflake: ["invalid snowflake"]} = errors_on(changeset)
