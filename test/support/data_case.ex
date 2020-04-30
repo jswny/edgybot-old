@@ -9,8 +9,9 @@ defmodule Edgybot.DataCase do
       import Ecto.Query
       import Edgybot.DataCase
 
-      import Edgybot.Meta.ServerFixtures
       import Edgybot.Meta.UserFixtures
+      import Edgybot.Meta.ServerFixtures
+      import Edgybot.Meta.MemberFixtures
       import Edgybot.Meta.ChannelFixtures
     end
   end

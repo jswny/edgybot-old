@@ -56,6 +56,39 @@ defmodule Edgybot.MetaTest do
     end
   end
 
+  describe "members" do
+    alias Edgybot.Meta.Member
+
+    test "create_member/1 with valid data creates a member" do
+      attrs = member_valid_attrs()
+      assert {:ok, %Member{}} = Meta.create_member(attrs)
+    end
+
+    test "create_member/1 with invalid data returns error changeset" do
+      attrs = member_invalid_attrs()
+      assert {:error, %Ecto.Changeset{}} = Meta.create_member(attrs)
+    end
+
+    test "create_member/1 with invalid user_id returns error changeset" do
+      attrs = member_valid_attrs(%{user_id: -1})
+      assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_member(attrs)
+      assert %{user: ["does not exist"]} = errors_on(changeset)
+    end
+
+    test "create_member/1 with invalid server_id returns error changeset" do
+      attrs = member_valid_attrs(%{server_id: -1})
+      assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_member(attrs)
+      assert %{server: ["does not exist"]} = errors_on(changeset)
+    end
+
+    test "create_member/1 with existing user_id and server_id returns error changeset" do
+      member = member_fixture()
+      attrs = member_valid_attrs(%{user_id: member.user_id, server_id: member.server_id})
+      assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_member(attrs)
+      assert %{user_id: ["has already been taken"]} = errors_on(changeset)
+    end
+  end
+
   describe "channels" do
     alias Edgybot.Meta.Channel
 

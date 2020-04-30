@@ -9,7 +9,5 @@ defmodule Edgybot.Repo.Migrations.CreateMembers do
 
       timestamps()
     end
-
-    create unique_index(:members, [:user_id, :server_id])
   end
 end

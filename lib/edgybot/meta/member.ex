@@ -16,6 +16,8 @@ defmodule Edgybot.Meta.Member do
     member
     |> cast(params, [:nickname, :user_id, :server_id])
     |> validate_required([:nickname, :user_id, :server_id])
-    |> unique_constraint([:user_id, :server_id])
+    |> assoc_constraint(:user)
+    |> assoc_constraint(:server)
+    |> unique_constraint([:user_id, :server_id], name: :members_pkey)
   end
 end
