@@ -1,7 +1,6 @@
 defmodule Edgybot.Meta do
   alias Edgybot.Repo
-  alias Edgybot.Meta.Server
-  alias Edgybot.Meta.Channel
+  alias Edgybot.Meta.{Server, Channel, User}
 
   def create_server(attrs \\ %{}) do
     %Server{}
@@ -11,6 +10,12 @@ defmodule Edgybot.Meta do
 
   def create_channel(attrs \\ %{}) do
     %Channel{}
+    |> Channel.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_user(attrs \\ %{}) do
+    %User{}
     |> Channel.changeset(attrs)
     |> Repo.insert()
   end
