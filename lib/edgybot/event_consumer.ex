@@ -20,8 +20,10 @@ defmodule EventConsumer do
     event_type = :MESSAGE_CREATE
     Logger.debug("Received event: #{event_type}")
 
+    ping = prefixed_command("ping")
+
     case message.content do
-      "!ping" ->
+      ^ping ->
         Api.create_message(message.channel_id, "Pong!")
       _ ->
         :ignore
@@ -34,5 +36,13 @@ defmodule EventConsumer do
     event_type = elem(event, 0)
     Logger.debug("Ignored event: #{event_type}")
     :noop
+  end
+
+  defp command_prefix() do
+    Application.get_env(:edgybot, :command_prefix)
+  end
+
+  defp prefixed_command(command) do
+    "#{command_prefix()} #{command}"
   end
 end

@@ -1,7 +1,8 @@
 import Config
 
 config :edgybot,
-  ecto_repos: [Edgybot.Repo]
+  ecto_repos: [Edgybot.Repo],
+  command_prefix: System.get_env("COMMAND_PREFIX") || "/e"
 
 config :nostrum,
   token: System.get_env("DISCORD_TOKEN"),
