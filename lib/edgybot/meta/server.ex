@@ -1,14 +1,15 @@
 defmodule Edgybot.Meta.Server do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Edgybot.Meta.Channel
   import Edgybot.Meta.Snowflake
+  alias Edgybot.Meta.{Channel, Member}
 
   schema "servers" do
     field :snowflake, :integer
     field :name, :string
     field :active, :boolean
     has_many :channels, Channel
+    has_many :members, Member
 
     timestamps()
   end

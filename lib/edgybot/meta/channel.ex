@@ -1,8 +1,8 @@
 defmodule Edgybot.Meta.Channel do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Edgybot.Meta.Server
   import Edgybot.Meta.Snowflake
+  alias Edgybot.Meta.Server
 
   schema "channels" do
     field :snowflake, :integer
