@@ -1,22 +1,21 @@
 import Config
 
-import Config
-
-discord_token =
-  System.get_env("DISCORD_TOKEN") ||
+get_env_var = fn (var_name) ->
+  var = System.get_env(var_name)
+  if var == nil || var == "" do
     raise """
-    environment variable DISCORD_TOKEN is missing.
+    environment variable #{var_name} is missing.
     """
+  else
+    var
+  end
+end
 
-database_url =
-  System.get_env("DATABASE_URL") ||
-    raise """
-    environment variable DATABASE_URL is missing.
-    For example: ecto://USER:PASS@HOST/DATABASE
-    """
+config :edgybot,
+  command_prefix: get_env_var.("COMMAND_PREFIX")
 
 config :edgybot, Edgybot.Repo,
-  url: database_url
+  url: get_env_var.("DATABASE_URL")
 
 config :nostrum,
-  token: discord_token
+  token: get_env_var.("DISCORD_TOKEN")
