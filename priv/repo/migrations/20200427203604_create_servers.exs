@@ -3,12 +3,13 @@ defmodule Edgybot.Repo.Migrations.CreateServers do
 
   def change do
     create table(:servers) do
-      add :discord_id, :string
+      add :snowflake, :bigint, null: false
       add :name, :string, null: false
+      add :active, :boolean, null: false, default: true
 
       timestamps()
     end
 
-    create unique_index(:servers, [:discord_id])
+    create unique_index(:servers, [:snowflake])
   end
 end
