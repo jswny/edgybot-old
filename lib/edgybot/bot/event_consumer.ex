@@ -20,13 +20,19 @@ defmodule Edgybot.Bot.EventConsumer do
     event_type = :MESSAGE_CREATE
     Logger.debug("Received event: #{event_type}")
 
-    ping = prefixed_command("ping")
-
-    case message.content do
-      ^ping ->
-        Api.create_message(message.channel_id, "Pong!")
+    # Don't respond to PMs
+    # Channels would have to understand PM channels if PMs are to be handled
+    case message.guild_id do
+      nil -> :ignore
       _ ->
-        :ignore
+        ping = prefixed_command("ping")
+
+        case message.content do
+          ^ping ->
+            Api.create_message(message.channel_id, "Pong!")
+          _ ->
+            :ignore
+        end
     end
   end
 
