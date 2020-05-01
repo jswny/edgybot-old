@@ -6,8 +6,8 @@ defmodule Edgybot.Meta.Member do
   @primary_key false
   schema "members" do
     field :nickname, :string
-    belongs_to :user, User, primary_key: true
-    belongs_to :server, Server, primary_key: true
+    belongs_to :user, User
+    belongs_to :server, Server
 
     timestamps()
   end
