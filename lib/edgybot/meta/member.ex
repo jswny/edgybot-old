@@ -3,7 +3,6 @@ defmodule Edgybot.Meta.Member do
   import Ecto.Changeset
   alias Edgybot.Meta.{User, Server}
 
-  @primary_key false
   schema "members" do
     field :nickname, :string
     belongs_to :user, User
