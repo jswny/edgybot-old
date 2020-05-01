@@ -18,6 +18,6 @@ defmodule Edgybot.Meta.Member do
     |> validate_required([:nickname, :user_id, :server_id])
     |> assoc_constraint(:user)
     |> assoc_constraint(:server)
-    |> unique_constraint([:user_id, :server_id], name: :members_pkey)
+    |> unique_constraint([:user_id, :server_id])
   end
 end
