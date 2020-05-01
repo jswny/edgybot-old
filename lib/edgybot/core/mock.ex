@@ -15,8 +15,8 @@ defmodule Edgybot.Core.Mock do
     member
     |> cast(params, [:mocker_member_id, :mockee_member_id])
     |> validate_required([:mocker_member_id, :mockee_member_id])
-    |> assoc_constraint(:member, name: :mocks_mocker_member_id_fkey)
-    |> assoc_constraint(:member, name: :mocks_mockee_member_id_fkey)
+    |> assoc_constraint(:mocker_member, name: :mocks_mocker_member_id_fkey)
+    |> assoc_constraint(:mockee_member, name: :mocks_mockee_member_id_fkey)
     |> unique_constraint([:mocker_member_id, :mockee_member_id])
   end
 end
