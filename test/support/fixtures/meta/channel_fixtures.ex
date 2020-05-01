@@ -1,12 +1,13 @@
 defmodule Edgybot.Meta.ChannelFixtures do
-  alias Edgybot.Meta
+  import Edgybot.TestUtils
   import Edgybot.Meta.ServerFixtures
+  alias Edgybot.Meta
 
   def channel_valid_attrs(attrs \\ %{}) do
     attrs
     |> Enum.into(%{
-      snowflake: 200317799350927360,
-      name: "foo",
+      snowflake: random_number(),
+      name: random_string(),
       server_id: Map.get(attrs, :server_id) || server_fixture().id
     })
   end

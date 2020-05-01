@@ -116,7 +116,7 @@ defmodule Edgybot.MetaTest do
 
     test "create_channel/1 with existing snowflake returns error changeset" do
       channel = channel_fixture()
-      attrs = channel_valid_attrs(%{server_id: channel.server_id})
+      attrs = channel_valid_attrs(%{server_id: channel.server_id, snowflake: channel.snowflake})
       assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_channel(attrs)
       assert %{snowflake: ["has already been taken"]} = errors_on(changeset)
     end
