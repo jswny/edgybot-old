@@ -5,8 +5,8 @@ defmodule Edgybot.Core.Mock do
 
   @primary_key false
   schema "mocks" do
-    belongs_to :mocker, Member, [foreign_key: :mocker_member_id]
-    belongs_to :mockee, Member, [foreign_key: :mockee_member_id]
+    belongs_to :mocker_member, Member, [foreign_key: :mocker_member_id]
+    belongs_to :mockee_member, Member, [foreign_key: :mockee_member_id]
 
     timestamps()
   end
