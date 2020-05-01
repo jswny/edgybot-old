@@ -3,9 +3,9 @@ defmodule Edgybot.Repo.Migrations.CreateMembers do
 
   def change do
     create table(:members) do
-      add :nickname, :string
-      add :user_id, references(:users)
-      add :server_id, references(:servers)
+      add :nickname, :string, null: false
+      add :user_id, references(:users), null: false
+      add :server_id, references(:servers), null: false
 
       timestamps()
     end
