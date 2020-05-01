@@ -3,8 +3,8 @@ defmodule Edgybot.Repo.Migrations.CreateMocks do
 
   def change do
     create table(:mocks) do
-      add :mocker_member_id, :integer, null: false
-      add :mockee_member_id, :integer, null: false
+      add :mocker_member_id, references(:members), null: false
+      add :mockee_member_id, references(:members), null: false
 
       timestamps()
     end
