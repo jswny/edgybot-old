@@ -49,8 +49,8 @@ defmodule Edgybot.MetaTest do
     end
 
     test "create_user/1 with existing snowflake returns error changeset" do
-      user_fixture()
-      attrs = user_valid_attrs()
+      user = user_fixture()
+      attrs = user_valid_attrs(%{snowflake: user.snowflake})
       assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_user(attrs)
       assert %{snowflake: ["has already been taken"]} = errors_on(changeset)
     end
