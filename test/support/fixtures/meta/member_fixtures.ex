@@ -1,12 +1,13 @@
 defmodule Edgybot.Meta.MemberFixtures do
-  alias Edgybot.Meta
+  import Edgybot.TestUtils
   import Edgybot.Meta.UserFixtures
   import Edgybot.Meta.ServerFixtures
+  alias Edgybot.Meta
 
   def member_valid_attrs(attrs \\ %{}) do
     attrs
     |> Enum.into(%{
-      nickname: "foo",
+      nickname: random_string(),
       user_id: Map.get(attrs, :user_id) || user_fixture().id,
       server_id: Map.get(attrs, :server_id) || server_fixture().id
     })
