@@ -5,7 +5,7 @@ defmodule Edgybot.Application do
 
   use Application
   require Logger
-  alias EventConsumer
+  alias Edgybot.Bot.EventConsumer
 
   def start(_type, _args) do
     # Starts a worker by calling: Edgybot.Worker.start_link(arg)

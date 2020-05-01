@@ -1,4 +1,4 @@
-defmodule EventConsumer do
+defmodule Edgybot.Bot.EventConsumer do
   use Nostrum.Consumer
   alias Nostrum.Api
   require Logger
@@ -11,7 +11,7 @@ defmodule EventConsumer do
     id = "event_consumer_thread_#{args[:thread_number]}"
     %{
       id: id,
-      start: {EventConsumer, :start_link, []}
+      start: {__MODULE__, :start_link, []}
     }
   end
 
