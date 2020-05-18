@@ -27,6 +27,18 @@ defmodule Edgybot.MetaTest do
       assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_server(attrs)
       assert %{snowflake: ["has already been taken"]} = errors_on(changeset)
     end
+
+    test "get_server/1 with valid snowflake returns server" do
+      fixture = server_fixture()
+      result = Meta.get_server(fixture.snowflake)
+      assert %Server{} = result
+    end
+
+    test "get_server/1 with invalid snowflake returns nil" do
+      server_fixture()
+      result = Meta.get_server(-1)
+      assert result == nil
+    end
   end
 
   describe "users" do
