@@ -37,17 +37,17 @@ defmodule Edgybot.Meta do
     |> Enum.map(fn {key, value} ->
       case key do
         :server_snowflake ->
-          ensure_exists_server(value)
+          ensure_exists_entity(value, &get_server/1, &Api.get_guild/1)
         true ->
           raise "Unhandled option {#{key}, #{value}}"
       end
     end)
   end
 
-  defp ensure_exists_server(snowflake) when is_integer(snowflake) do
-    case get_server(snowflake) do
+  defp ensure_exists_entity(snowflake, get_entity_local, get_entity_remote) when is_integer(snowflake) and is_function(get_entity_local) and is_function(get_entity_remote) do
+    case get_entity_local.(snowflake) do
       nil ->
-        server = Api.get_guild(snowflake)
+        server = get_entity_remote.(snowflake)
         case server do
           {:ok, server} ->
             attrs = %{

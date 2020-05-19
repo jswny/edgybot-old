@@ -133,4 +133,7 @@ defmodule Edgybot.MetaTest do
       assert %{snowflake: ["has already been taken"]} = errors_on(changeset)
     end
   end
+
+  # describe "ensure_exists/1" do
+  # end
 end
