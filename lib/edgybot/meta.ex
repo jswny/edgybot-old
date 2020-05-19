@@ -33,15 +33,24 @@ defmodule Edgybot.Meta do
   end
 
   def ensure_exists(opts) when is_list(opts) do
-    opts
-    |> Enum.map(fn {key, value} ->
-      case key do
-        :server_snowflake ->
-          ensure_exists_entity(value, &get_server/1, &Api.get_guild/1)
-        true ->
-          raise "Unhandled option {#{key}, #{value}}"
-      end
-    end)
+    result =
+      opts
+      |> Enum.map(fn {key, value} ->
+        case key do
+          :server_snowflake ->
+            get_entity_local = Keyword.get(opts, :get_server_local, &get_server/1)
+            get_entity_remote = Keyword.get(opts, :get_server_remote, &Api.get_guild/1)
+            {:ok, struct} = ensure_exists_entity(value, get_entity_local, get_entity_remote)
+            struct
+          _ -> :skip
+        end
+      end)
+      |> Enum.filter(fn item -> item != :skip end)
+
+    case Enum.count(result) do
+      1 -> Enum.at(result, 0)
+      _ -> result
+    end
   end
 
   defp ensure_exists_entity(snowflake, get_entity_local, get_entity_remote) when is_integer(snowflake) and is_function(get_entity_local) and is_function(get_entity_remote) do

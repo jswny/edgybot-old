@@ -1,10 +1,9 @@
 defmodule Edgybot.MetaTest do
   use Edgybot.DataCase
   alias Edgybot.Meta
+  alias Edgybot.Meta.{User, Server, Member, Channel}
 
   describe "servers" do
-    alias Edgybot.Meta.Server
-
     test "create_server/1 with valid data creates a server" do
       attrs = server_valid_attrs()
       assert {:ok, %Server{}} = Meta.create_server(attrs)
@@ -42,8 +41,6 @@ defmodule Edgybot.MetaTest do
   end
 
   describe "users" do
-    alias Edgybot.Meta.User
-
     test "create_user/1 with valid data creates a user" do
       attrs = user_valid_attrs()
       assert {:ok, %User{}} = Meta.create_user(attrs)
@@ -69,8 +66,6 @@ defmodule Edgybot.MetaTest do
   end
 
   describe "members" do
-    alias Edgybot.Meta.Member
-
     test "create_member/1 with valid data creates a member" do
       attrs = member_valid_attrs()
       assert {:ok, %Member{}} = Meta.create_member(attrs)
@@ -102,8 +97,6 @@ defmodule Edgybot.MetaTest do
   end
 
   describe "channels" do
-    alias Edgybot.Meta.Channel
-
     test "create_channel/1 with valid data creates a channel" do
       attrs = channel_valid_attrs()
       assert {:ok, %Channel{}} = Meta.create_channel(attrs)
@@ -134,6 +127,22 @@ defmodule Edgybot.MetaTest do
     end
   end
 
-  # describe "ensure_exists/1" do
-  # end
+  describe "ensure_exists/1" do
+    test "returns the entity it creates" do
+      result = Meta.ensure_exists(
+        server_snowflake: server_valid_attrs().snowflake,
+        get_server_remote: fn _ -> {:ok, to_server_struct(server_valid_attrs())} end
+      )
+      assert %Server{} = result
+    end
+
+    test "creates server if it doesn't already exist" do
+      snowflake = server_valid_attrs().snowflake
+      Meta.ensure_exists(
+        server_snowflake: snowflake,
+        get_server_remote: fn _ -> {:ok, to_server_struct(server_valid_attrs())} end
+      )
+      assert %Server{} = Meta.get_server(snowflake)
+    end
+  end
 end

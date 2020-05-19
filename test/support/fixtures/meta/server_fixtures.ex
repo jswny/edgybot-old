@@ -1,6 +1,7 @@
 defmodule Edgybot.Meta.ServerFixtures do
   import Edgybot.TestUtils
   alias Edgybot.Meta
+  alias Edgybot.Meta.Server
 
   def server_valid_attrs(attrs \\ %{}) do
     attrs
@@ -20,5 +21,14 @@ defmodule Edgybot.Meta.ServerFixtures do
       |> Meta.create_server()
 
     server
+  end
+
+  def to_server_struct(attrs) when is_map(attrs) do
+    %Server{
+      id: 123,
+      name: attrs.name,
+      snowflake: attrs.snowflake,
+      active: attrs.active
+    }
   end
 end
