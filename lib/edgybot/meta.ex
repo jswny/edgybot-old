@@ -32,14 +32,36 @@ defmodule Edgybot.Meta do
     |> Repo.insert()
   end
 
-  # def ensure_exists(opts) when is_list(opts) do
-  #   cond do
-  #     Keyword.get(:server_id) ->
+  def ensure_exists(opts) when is_list(opts) do
+    opts
+    |> Enum.map(fn {key, value} ->
+      case key do
+        :server_snowflake ->
+          ensure_exists_server(value)
+        true ->
+          raise "Unhandled option {#{key}, #{value}}"
+      end
+    end)
+  end
 
-  #   end
-  # end
-
-  # defp ensure_exists_server(server_id) when is_bitstring(term) do
-
-  # end
+  defp ensure_exists_server(snowflake) when is_integer(snowflake) do
+    case get_server(snowflake) do
+      nil ->
+        server = Api.get_guild(snowflake)
+        case server do
+          {:ok, server} ->
+            attrs = %{
+              snowflake: snowflake,
+              name: server.name,
+              active: true
+            }
+            case create_server(attrs) do
+              {:ok, struct} -> {:ok, struct}
+              {:error, changeset} -> raise "Unable to create server with attrs #{attrs} and error changeset #{changeset}"
+            end
+          {:error, reason} -> raise "Unable to get server from Discord with snowflake #{snowflake} because #{reason}"
+        end
+      server -> {:ok, server}
+    end
+  end
 end
