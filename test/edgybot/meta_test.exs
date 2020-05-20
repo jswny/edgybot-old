@@ -31,6 +31,7 @@ defmodule Edgybot.MetaTest do
       fixture = server_fixture()
       result = Meta.get_server(fixture.snowflake)
       assert %Server{} = result
+      assert result.name == fixture.name
     end
 
     test "get_server/1 with invalid snowflake returns nil" do
@@ -137,12 +138,15 @@ defmodule Edgybot.MetaTest do
     end
 
     test "creates server if it doesn't already exist" do
-      snowflake = server_valid_attrs().snowflake
+      attrs = server_valid_attrs()
+      snowflake = attrs.snowflake
       Meta.ensure_exists(
         server_snowflake: snowflake,
-        get_server_remote: fn _ -> {:ok, to_server_struct(server_valid_attrs())} end
+        get_server_remote: fn _ -> {:ok, to_server_struct(attrs)} end
       )
-      assert %Server{} = Meta.get_server(snowflake)
+      result = Meta.get_server(snowflake)
+      assert %Server{} = result
+      assert result.name == attrs.name
     end
   end
 end
