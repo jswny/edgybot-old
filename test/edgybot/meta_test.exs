@@ -35,7 +35,6 @@ defmodule Edgybot.MetaTest do
     end
 
     test "get_server/1 with invalid snowflake returns nil" do
-      server_fixture()
       result = Meta.get_server(-1)
       assert result == nil
     end
@@ -126,6 +125,18 @@ defmodule Edgybot.MetaTest do
       assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_channel(attrs)
       assert %{snowflake: ["has already been taken"]} = errors_on(changeset)
     end
+
+    test "get_channel/1 with valid snowflake returns channel" do
+      fixture = channel_fixture()
+      result = Meta.get_channel(fixture.snowflake)
+      assert %Channel{} = result
+      assert result.name == fixture.name
+    end
+
+    test "get_channel/1 with invalid snowflake returns nil" do
+      result = Meta.get_channel(-1)
+      assert result == nil
+    end
   end
 
   describe "ensure_exists/1" do
@@ -144,6 +155,21 @@ defmodule Edgybot.MetaTest do
         server_snowflake: snowflake,
         get_server_remote: fn _ -> {:ok, to_server_struct(attrs)} end
       )
+      result = Meta.get_server(snowflake)
+      assert %Server{} = result
+      assert result.name == attrs.name
+    end
+
+    test "uses existing server" do
+      attrs = server_valid_attrs()
+      snowflake = attrs.snowflake
+      Meta.create_server(attrs)
+
+      Meta.ensure_exists(
+        server_snowflake: snowflake,
+        get_server_remote: fn _ -> {:error, :nothing} end
+      )
+
       result = Meta.get_server(snowflake)
       assert %Server{} = result
       assert result.name == attrs.name

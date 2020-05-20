@@ -32,6 +32,11 @@ defmodule Edgybot.Meta do
     |> Repo.insert()
   end
 
+  def get_channel(snowflake) when is_integer(snowflake) do
+    Channel
+    |> Repo.get_by(snowflake: snowflake)
+  end
+
   def ensure_exists(opts) when is_list(opts) do
     result =
       opts
