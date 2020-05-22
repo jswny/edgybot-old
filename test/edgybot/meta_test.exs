@@ -141,11 +141,13 @@ defmodule Edgybot.MetaTest do
 
   describe "ensure_exists/1" do
     test "returns the entity it creates" do
+      attrs = server_valid_attrs()
       result = Meta.ensure_exists(
-        server_snowflake: server_valid_attrs().snowflake,
-        get_server_remote: fn _ -> {:ok, to_server_struct(server_valid_attrs())} end
+        server_snowflake: attrs.snowflake,
+        get_server_remote: fn _ -> {:ok, struct(Server, attrs)} end
       )
       assert %Server{} = result
+      assert result.name == attrs.name
     end
 
     test "creates server if it doesn't already exist" do
@@ -153,7 +155,7 @@ defmodule Edgybot.MetaTest do
       snowflake = attrs.snowflake
       Meta.ensure_exists(
         server_snowflake: snowflake,
-        get_server_remote: fn _ -> {:ok, to_server_struct(attrs)} end
+        get_server_remote: fn _ -> {:ok, struct(Server, attrs)} end
       )
       result = Meta.get_server(snowflake)
       assert %Server{} = result
@@ -172,6 +174,33 @@ defmodule Edgybot.MetaTest do
 
       result = Meta.get_server(snowflake)
       assert %Server{} = result
+      assert result.name == attrs.name
+    end
+
+    test "creates channel if it doesn't already exist" do
+      attrs = channel_valid_attrs()
+      snowflake = attrs.snowflake
+      Meta.ensure_exists(
+        channel_snowflake: snowflake,
+        get_channel_remote: fn _ -> {:ok, struct(Channel, attrs)} end
+      )
+      result = Meta.get_channel(snowflake)
+      assert %Channel{} = result
+      assert result.name == attrs.name
+    end
+
+    test "uses existing channel" do
+      attrs = channel_valid_attrs()
+      snowflake = attrs.snowflake
+      Meta.create_channel(attrs)
+
+      Meta.ensure_exists(
+        channel_snowflake: snowflake,
+        get_channel_remote: fn _ -> {:error, :nothing} end
+      )
+
+      result = Meta.get_channel(snowflake)
+      assert %Channel{} = result
       assert result.name == attrs.name
     end
   end
