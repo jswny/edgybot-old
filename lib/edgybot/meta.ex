@@ -59,6 +59,12 @@ defmodule Edgybot.Meta do
             create_entity = &create_channel/1
             {:ok, struct} = ensure_exists_entity(value, get_entity_local, get_entity_remote, create_entity)
             struct
+          :user_snowflake ->
+            get_entity_local = &get_user/1
+            get_entity_remote = Keyword.get(opts, :get_user_remote, &Api.get_user/1)
+            create_entity = &create_user/1
+            {:ok, struct} = ensure_exists_entity(value, get_entity_local, get_entity_remote, create_entity)
+            struct
           _ -> :skip
         end
       end)

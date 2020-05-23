@@ -215,5 +215,32 @@ defmodule Edgybot.MetaTest do
       assert %Channel{} = result
       assert result.name == attrs.name
     end
+
+    test "creates user if it doesn't already exist" do
+      attrs = user_valid_attrs()
+      snowflake = attrs.snowflake
+      Meta.ensure_exists(
+        user_snowflake: snowflake,
+        get_user_remote: fn _ -> {:ok, struct(User, attrs)} end
+      )
+      result = Meta.get_user(snowflake)
+      assert %User{} = result
+      assert result.username == attrs.username
+    end
+
+    test "uses existing user" do
+      attrs = user_valid_attrs()
+      snowflake = attrs.snowflake
+      Meta.create_user(attrs)
+
+      Meta.ensure_exists(
+        user_snowflake: snowflake,
+        get_user_remote: fn _ -> {:error, :nothing} end
+      )
+
+      result = Meta.get_user(snowflake)
+      assert %User{} = result
+      assert result.username == attrs.username
+    end
   end
 end
