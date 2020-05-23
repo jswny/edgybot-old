@@ -63,6 +63,18 @@ defmodule Edgybot.MetaTest do
       assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_user(attrs)
       assert %{snowflake: ["has already been taken"]} = errors_on(changeset)
     end
+
+    test "get_user/1 with valid snowflake returns user" do
+      fixture = user_fixture()
+      result = Meta.get_user(fixture.snowflake)
+      assert %User{} = result
+      assert result.username == fixture.username
+    end
+
+    test "get_user/1 with invalid snowflake returns nil" do
+      result = Meta.get_user(-1)
+      assert result == nil
+    end
   end
 
   describe "members" do

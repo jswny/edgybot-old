@@ -9,6 +9,11 @@ defmodule Edgybot.Meta do
     |> Repo.insert()
   end
 
+  def get_user(snowflake) when is_integer(snowflake) do
+    User
+    |> Repo.get_by(snowflake: snowflake)
+  end
+
   def create_server(attrs \\ %{}) do
     %Server{}
     |> Server.changeset(attrs)
