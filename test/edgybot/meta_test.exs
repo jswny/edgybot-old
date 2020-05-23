@@ -106,6 +106,18 @@ defmodule Edgybot.MetaTest do
       assert {:error, %Ecto.Changeset{} = changeset} = Meta.create_member(attrs)
       assert %{user_id: ["has already been taken"]} = errors_on(changeset)
     end
+
+    test "get_member/1 with valid snowflake returns member" do
+      fixture = member_fixture()
+      result = Meta.get_member(fixture.user_id, fixture.server_id)
+      assert %Member{} = result
+      assert result.nickname == fixture.nickname
+    end
+
+    test "get_member/1 with invalid snowflake returns nil" do
+      result = Meta.get_member(-1, -1)
+      assert result == nil
+    end
   end
 
   describe "channels" do

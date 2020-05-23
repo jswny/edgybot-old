@@ -31,6 +31,11 @@ defmodule Edgybot.Meta do
     |> Repo.insert()
   end
 
+  def get_member(user_id, server_id) when is_integer(user_id) and is_integer(server_id) do
+    Member
+    |> Repo.get_by(user_id: user_id, server_id: server_id)
+  end
+
   def create_channel(attrs \\ %{}) do
     %Channel{}
     |> Channel.changeset(attrs)
