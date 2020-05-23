@@ -166,10 +166,12 @@ defmodule Edgybot.MetaTest do
   describe "ensure_exists/1" do
     test "returns the entity it creates" do
       attrs = server_valid_attrs()
+
       result = Meta.ensure_exists(
         server_snowflake: attrs.snowflake,
-        get_server_remote: fn _ -> {:ok, struct(Server, attrs)} end
+        get_server_remote: fn -> {:ok, struct(Server, attrs)} end
       )
+
       assert %Server{} = result
       assert result.name == attrs.name
     end
@@ -177,10 +179,12 @@ defmodule Edgybot.MetaTest do
     test "creates server if it doesn't already exist" do
       attrs = server_valid_attrs()
       snowflake = attrs.snowflake
+
       Meta.ensure_exists(
         server_snowflake: snowflake,
-        get_server_remote: fn _ -> {:ok, struct(Server, attrs)} end
+        get_server_remote: fn -> {:ok, struct(Server, attrs)} end
       )
+
       result = Meta.get_server(snowflake)
       assert %Server{} = result
       assert result.name == attrs.name
@@ -193,7 +197,7 @@ defmodule Edgybot.MetaTest do
 
       Meta.ensure_exists(
         server_snowflake: snowflake,
-        get_server_remote: fn _ -> {:error, :nothing} end
+        get_server_remote: fn -> {:error, :nothing} end
       )
 
       result = Meta.get_server(snowflake)
@@ -204,10 +208,12 @@ defmodule Edgybot.MetaTest do
     test "creates channel if it doesn't already exist" do
       attrs = channel_valid_attrs()
       snowflake = attrs.snowflake
+
       Meta.ensure_exists(
         channel_snowflake: snowflake,
-        get_channel_remote: fn _ -> {:ok, struct(Channel, attrs)} end
+        get_channel_remote: fn -> {:ok, struct(Channel, attrs)} end
       )
+
       result = Meta.get_channel(snowflake)
       assert %Channel{} = result
       assert result.name == attrs.name
@@ -220,7 +226,7 @@ defmodule Edgybot.MetaTest do
 
       Meta.ensure_exists(
         channel_snowflake: snowflake,
-        get_channel_remote: fn _ -> {:error, :nothing} end
+        get_channel_remote: fn -> {:error, :nothing} end
       )
 
       result = Meta.get_channel(snowflake)
@@ -231,10 +237,12 @@ defmodule Edgybot.MetaTest do
     test "creates user if it doesn't already exist" do
       attrs = user_valid_attrs()
       snowflake = attrs.snowflake
+
       Meta.ensure_exists(
         user_snowflake: snowflake,
-        get_user_remote: fn _ -> {:ok, struct(User, attrs)} end
+        get_user_remote: fn -> {:ok, struct(User, attrs)} end
       )
+
       result = Meta.get_user(snowflake)
       assert %User{} = result
       assert result.username == attrs.username
@@ -247,12 +255,43 @@ defmodule Edgybot.MetaTest do
 
       Meta.ensure_exists(
         user_snowflake: snowflake,
-        get_user_remote: fn _ -> {:error, :nothing} end
+        get_user_remote: fn -> {:error, :nothing} end
       )
 
       result = Meta.get_user(snowflake)
       assert %User{} = result
       assert result.username == attrs.username
+    end
+
+    test "creates member if it doesn't already exist" do
+      attrs = member_valid_attrs()
+      user_id = attrs.user_id
+      server_id = attrs.server_id
+
+      Meta.ensure_exists(
+        member_ids: {user_id, server_id},
+        get_member_remote: fn -> {:ok, struct(Member, attrs)} end
+      )
+
+      result = Meta.get_member(user_id, server_id)
+      assert %Member{} = result
+      assert result.nickname == attrs.nickname
+    end
+
+    test "uses existing member" do
+      attrs = member_valid_attrs()
+      user_id = attrs.user_id
+      server_id = attrs.server_id
+      Meta.create_member(attrs)
+
+      Meta.ensure_exists(
+        member_ids: {user_id, server_id},
+        get_member_remote: fn -> {:error, :nothing} end
+      )
+
+      result = Meta.get_member(user_id, server_id)
+      assert %Member{} = result
+      assert result.nickname == attrs.nickname
     end
   end
 end

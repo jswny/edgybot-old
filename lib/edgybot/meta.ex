@@ -53,22 +53,30 @@ defmodule Edgybot.Meta do
       |> Enum.map(fn {key, value} ->
         case key do
           :server_snowflake ->
-            get_entity_local = &get_server/1
-            get_entity_remote = Keyword.get(opts, :get_server_remote, &Api.get_guild/1)
+            get_entity_local = fn -> get_server(value) end
+            get_entity_remote = Keyword.get(opts, :get_server_remote, fn -> Api.get_guild(value) end)
             create_entity = &create_server/1
-            {:ok, struct} = ensure_exists_entity(value, get_entity_local, get_entity_remote, create_entity)
+            {:ok, struct} = ensure_exists_entity(get_entity_local, get_entity_remote, create_entity)
             struct
           :channel_snowflake ->
-            get_entity_local = &get_channel/1
-            get_entity_remote = Keyword.get(opts, :get_channel_remote, &Api.get_channel/1)
+            get_entity_local = fn -> get_channel(value) end
+            get_entity_remote = Keyword.get(opts, :get_channel_remote, fn -> Api.get_channel(value) end)
             create_entity = &create_channel/1
-            {:ok, struct} = ensure_exists_entity(value, get_entity_local, get_entity_remote, create_entity)
+            {:ok, struct} = ensure_exists_entity(get_entity_local, get_entity_remote, create_entity)
             struct
           :user_snowflake ->
-            get_entity_local = &get_user/1
-            get_entity_remote = Keyword.get(opts, :get_user_remote, &Api.get_user/1)
+            get_entity_local = fn -> get_user(value) end
+            get_entity_remote = Keyword.get(opts, :get_user_remote, fn -> Api.get_user(value) end)
             create_entity = &create_user/1
-            {:ok, struct} = ensure_exists_entity(value, get_entity_local, get_entity_remote, create_entity)
+            {:ok, struct} = ensure_exists_entity(get_entity_local, get_entity_remote, create_entity)
+            struct
+          :member_ids ->
+            user_id = elem(value, 0)
+            server_id = elem(value, 1)
+            get_entity_local = fn -> get_member(user_id, server_id) end
+            get_entity_remote = Keyword.get(opts, :get_member_remote, fn -> Api.get_guild_member(server_id, user_id) end)
+            create_entity = &create_member/1
+            {:ok, struct} = ensure_exists_entity(get_entity_local, get_entity_remote, create_entity)
             struct
           _ -> :skip
         end
@@ -81,10 +89,10 @@ defmodule Edgybot.Meta do
     end
   end
 
-  defp ensure_exists_entity(snowflake, get_entity_local, get_entity_remote, create_entity) when is_integer(snowflake) and is_function(get_entity_local) and is_function(get_entity_remote) and is_function(create_entity) do
-    case get_entity_local.(snowflake) do
+  defp ensure_exists_entity(get_entity_local, get_entity_remote, create_entity) when is_function(get_entity_local) and is_function(get_entity_remote) and is_function(create_entity) do
+    case get_entity_local.() do
       nil ->
-        entity_remote = get_entity_remote.(snowflake)
+        entity_remote = get_entity_remote.()
         case entity_remote do
           {:ok, entity} ->
             attrs = Map.from_struct(entity)
@@ -92,7 +100,7 @@ defmodule Edgybot.Meta do
               {:ok, created_entity} -> {:ok, created_entity}
               {:error, changeset} -> raise "Unable to create entity with attrs #{inspect(attrs)} and error changeset #{inspect(changeset)}"
             end
-          {:error, reason} -> raise "Unable to get entity from Discord with snowflake #{snowflake} because #{reason}"
+          {:error, reason} -> raise "Unable to get entity from Discord because #{reason}"
         end
       entity_local -> {:ok, entity_local}
     end
