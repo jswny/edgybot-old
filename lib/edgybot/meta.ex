@@ -1,4 +1,5 @@
 defmodule Edgybot.Meta do
+  require Logger
   alias Edgybot.Repo
   alias Edgybot.Meta.{User, Server, Member, Channel}
   alias Nostrum.Api
@@ -70,6 +71,12 @@ defmodule Edgybot.Meta do
             create_entity = &create_user/1
             {:ok, struct} = ensure_exists_entity(get_entity_local, get_entity_remote, create_entity)
             struct
+          :user_attrs ->
+            get_entity_local = fn -> get_user(value.snowflake) end
+            get_entity_remote = fn -> {:ok, struct(User, value)} end
+            create_entity = &create_user/1
+            {:ok, struct} = ensure_exists_entity(get_entity_local, get_entity_remote, create_entity)
+            struct
           :member_ids ->
             user_id = elem(value, 0)
             server_id = elem(value, 1)
@@ -78,7 +85,9 @@ defmodule Edgybot.Meta do
             create_entity = &create_member/1
             {:ok, struct} = ensure_exists_entity(get_entity_local, get_entity_remote, create_entity)
             struct
-          _ -> :skip
+          _ ->
+            Logger.debug("Skipping ensuring existance of entry with key #{key}")
+            :skip
         end
       end)
       |> Enum.filter(fn item -> item != :skip end)

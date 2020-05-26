@@ -248,6 +248,19 @@ defmodule Edgybot.MetaTest do
       assert result.username == attrs.username
     end
 
+    test "creates user from attributes if it doesn't already exist" do
+      attrs = user_valid_attrs()
+      snowflake = attrs.snowflake
+
+      Meta.ensure_exists(
+        user_attrs: attrs
+      )
+
+      result = Meta.get_user(snowflake)
+      assert %User{} = result
+      assert result.username == attrs.username
+    end
+
     test "uses existing user" do
       attrs = user_valid_attrs()
       snowflake = attrs.snowflake
