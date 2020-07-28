@@ -26,7 +26,7 @@ edgybot-*.tar
 .elixir_ls/
 
 # Environment variables
-.env
+*.env*
 
 # Postgres Data
 pgdata/
