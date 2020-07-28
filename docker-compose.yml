@@ -10,7 +10,7 @@ services:
       - POSTGRES_DB=edgybot_prod
   migrate:
     image: "${IMAGE:-jswny/edgybot}"
-    container_name: "${CONTAINER_NAME:-edgybot}-migration"
+    container_name: "${CONTAINER_NAME:-edgybot}-migrate"
     depends_on:
       - db
     command: eval "Edgybot.Release.migrate"
