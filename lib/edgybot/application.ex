@@ -4,6 +4,7 @@ defmodule Edgybot.Application do
   @moduledoc false
 
   use Application
+  require Logger
   alias EventConsumer
 
   def start(_type, _args) do
@@ -13,6 +14,9 @@ defmodule Edgybot.Application do
     children = children ++ [
       Edgybot.Repo
     ]
+
+    prefix = Application.get_env(:edgybot, :command_prefix)
+    Logger.info("Listening to prefix #{prefix}")
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

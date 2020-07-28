@@ -2,31 +2,31 @@ version: '3'
 services:
   db:
     image: postgres:12.2-alpine
-    container_name: "edgybot-${TAG:-beta}-db"
+    container_name: "${CONTAINER_NAME:-edgybot}-db"
     volumes:
       - ${PWD}/pgdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=edgybot_prod
   migration:
-    image: "jswny/edgybot:${TAG:-beta}"
-    container_name: "edgybot-${TAG:-beta}-migration"
+    image: "${IMAGE:-jswny/edgybot}"
+    container_name: "${CONTAINER_NAME:-edgybot}-migration"
     depends_on:
       - db
     command: eval "Edgybot.Release.migrate"
     environment:
       - COMMAND_PREFIX=${COMMAND_PREFIX}
       - DISCORD_TOKEN=${DISCORD_TOKEN}
-      - DATABASE_URL=ecto://postgres:postgres@edgybot-${TAG:-beta}-db:5432/edgybot_prod
+      - DATABASE_URL=ecto://postgres:postgres@${CONTAINER_NAME:-edgybot}-db:5432/edgybot_prod
   bot:
     build: .
-    image: "jswny/edgybot:${TAG:-beta}"
-    container_name: "edgybot-${TAG:-beta}"
+    image: "${IMAGE:-jswny/edgybot}"
+    container_name: "${CONTAINER_NAME:-edgybot}"
     depends_on:
       - db
       - migration
     environment:
       - COMMAND_PREFIX=${COMMAND_PREFIX}
       - DISCORD_TOKEN=${DISCORD_TOKEN}
-      - DATABASE_URL=ecto://postgres:postgres@edgybot-${TAG:-beta}-db:5432/edgybot_prod
+      - DATABASE_URL=ecto://postgres:postgres@${CONTAINER_NAME:-edgybot}-db:5432/edgybot_prod
   
