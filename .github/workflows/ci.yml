@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy
     # if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags') }}
+    if: ${{ !contains(github.ref, 'refs/tags') }}
     steps:
       - uses: actions/checkout@v2
       - uses: docker/build-push-action@v1
