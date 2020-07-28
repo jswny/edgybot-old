@@ -1,11 +1,13 @@
 defmodule Edgybot.Meta.ServerFixtures do
+  import Edgybot.TestUtils
   alias Edgybot.Meta
+  alias Edgybot.Meta.Server
 
   def server_valid_attrs(attrs \\ %{}) do
     attrs
     |> Enum.into(%{
-      snowflake: 200317799350927360,
-      name: "foo",
+      snowflake: random_number(),
+      name: random_string(),
       active: true
     })
   end

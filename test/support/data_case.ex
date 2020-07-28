@@ -13,6 +13,8 @@ defmodule Edgybot.DataCase do
       import Edgybot.Meta.ServerFixtures
       import Edgybot.Meta.MemberFixtures
       import Edgybot.Meta.ChannelFixtures
+
+      import Edgybot.Core.MockFixtures
     end
   end
 

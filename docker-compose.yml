@@ -8,9 +8,9 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=edgybot_prod
-  migration:
+  migrate:
     image: "${IMAGE:-jswny/edgybot}"
-    container_name: "${CONTAINER_NAME:-edgybot}-migration"
+    container_name: "${CONTAINER_NAME:-edgybot}-migrate"
     depends_on:
       - db
     command: eval "Edgybot.Release.migrate"
@@ -24,7 +24,7 @@ services:
     container_name: "${CONTAINER_NAME:-edgybot}"
     depends_on:
       - db
-      - migration
+      - migrate
     environment:
       - COMMAND_PREFIX=${COMMAND_PREFIX}
       - DISCORD_TOKEN=${DISCORD_TOKEN}

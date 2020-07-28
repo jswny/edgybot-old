@@ -1,12 +1,13 @@
 defmodule Edgybot.Meta.UserFixtures do
+  import Edgybot.TestUtils
   alias Edgybot.Meta
 
   def user_valid_attrs(attrs \\ %{}) do
     attrs
     |> Enum.into(%{
-      snowflake: 200317799350927360,
-      username: "foo",
-      discriminator: "1234",
+      snowflake: random_number(),
+      username: random_string(),
+      discriminator: random_discriminator(),
     })
   end
 
