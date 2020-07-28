@@ -25,6 +25,8 @@ jobs:
           elixir-version: '1.10.4'
       - run: mix deps.get
       - run: mix test
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN_BETA}}
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
