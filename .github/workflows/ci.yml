@@ -14,11 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
-          with:
-            otp-version: '23.0'
-            elixir-version: '1.10.4'
-        - run: mix deps.get
-        - run: mix test
+        with:
+          otp-version: '23.0'
+          elixir-version: '1.10.4'
+      - run: mix deps.get
+      - run: mix test
   deploy:
     runs-on: ubuntu-latest
     name: Deploy
